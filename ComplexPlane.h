@@ -1,6 +1,5 @@
-#pragma once
-
 #include <SFML/Graphics.hpp>
+#include <complex>
 
 const unsigned int MAX_ITER = 64;
 const float BASE_WIDTH = 4.0;
@@ -12,30 +11,39 @@ enum class State {
     DISPLAYING
 };
 
-class ComplexPlane : public sf::Drawable {
+class ComplexPlane {
 public:
-    ComplexPlane(unsigned int width, unsigned int height);
+    // Constructors
+    ComplexPlane(sf::RenderWindow& window);
+    ComplexPlane(sf::RenderWindow& window, float centerX, float centerY, float width, float height);
 
-    void zoomIn(int x, int y);
-    void zoomOut(int x, int y);
-    void setMouseLocation(sf::Vector2i mousePixel);
-    void updateRender();
-    void loadText(sf::Text& text);
+    // Destructor
+    ~ComplexPlane();
+
+    // Setters
+    void setCenter(float centerX, float centerY);
+    void setWidth(float width);
+    void setHeight(float height);
+    void setState(State state);
+
+    // Getters
+    float getCenterX() const;
+    float getCenterY() const;
+    float getWidth() const;
+    float getHeight() const;
+    State getState() const;
+
+    // SFML specific functions
+    void draw();
+    void handleEvent(sf::Event& event);
 
 private:
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
+    sf::RenderWindow& window;
+    float centerX;
+    float centerY;
+    float width;
+    float height;
     State state;
-    sf::VertexArray vertices;
-    sf::Vector2i mouseLocation;
-    sf::Vector2f planeCenter;
-    sf::Vector2f planeSize;
-    float aspectRatio;
-    unsigned int screenWidth;
-    unsigned int screenHeight;
-    unsigned int zoomCount;
 
-    sf::Vector2f mapPixelToCoords(sf::Vector2i mousePixel);
-    size_t countIterations(sf::Vector2f coord);
-    void iterationsToRGB(size_t count, sf::Uint8& r, sf::Uint8& g, sf::Uint8& b);
+    // Other private members as needed for SFML integration
 };
